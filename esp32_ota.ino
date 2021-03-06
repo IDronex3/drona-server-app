@@ -9,13 +9,10 @@ const char * password = "";
 
 
 String FirmwareVer = {
-  "3.0"
+  "3.1"
 };
 #define URL_fw_Version "https://raw.githubusercontent.com/IDronex3/drona-server-app/main/bin_version.txt"
 #define URL_fw_Bin "https://raw.githubusercontent.com/IDronex3/drona-server-app/main/fw.bin"
-
-//#define URL_fw_Version "http://cade-make.000webhostapp.com/version.txt"
-//#define URL_fw_Bin "http://cade-make.000webhostapp.com/firmware.bin"
 
 void connect_wifi();
 void firmwareUpdate();
@@ -37,59 +34,57 @@ void repeatedCall() {
   }
   if ((currentMillis - previousMillis_2) >= mini_interval) {
     previousMillis_2 = currentMillis;
-    Serial.print("idle loop...");
-    Serial.print(num++);
-    Serial.print(" Active fw version:");
-    Serial.println(FirmwareVer);
-   if(WiFi.status() == WL_CONNECTED) 
+    //Serial.print("idle loop...");
+    //Serial.print(num++);
+    //Serial.print(" Active fw version:");
+    //Serial.println(FirmwareVer);
+   if(WiFi.status() != WL_CONNECTED) 
    {
-       Serial.println("wifi connected");
+       //Serial.println("wifi connected");
+      connect_wifi();
+
    }
-   else
-   {
-    connect_wifi();
-   }
+//   else
+//   {
+//    connect_wifi();
+//   }
   }
 }
 
-struct Button {
-  const uint8_t PIN;
-  uint32_t numberKeyPresses;
-  bool pressed;
-};
-
-Button button_boot = {
-  0,
-  0,
-  false
-};
-/*void IRAM_ATTR isr(void* arg) {
-    Button* s = static_cast<Button*>(arg);
-    s->numberKeyPresses += 1;
-    s->pressed = true;
-}*/
-
-void IRAM_ATTR isr() {
-  button_boot.numberKeyPresses += 1;
-  button_boot.pressed = true;
-}
+//struct Button {
+//  const uint8_t PIN;
+//  uint32_t numberKeyPresses;
+//  bool pressed;
+//};
+//
+//Button button_boot = {
+//  0,
+//  0,
+//  false
+//};
+//
+//
+//void IRAM_ATTR isr() {
+//  button_boot.numberKeyPresses += 1;
+//  button_boot.pressed = true;
+//}
 
 
 void setup() {
-  pinMode(button_boot.PIN, INPUT);
-  attachInterrupt(button_boot.PIN, isr, RISING);
+  //pinMode(button_boot.PIN, INPUT);
+  //attachInterrupt(button_boot.PIN, isr, RISING);
   Serial.begin(115200);
-  Serial.print("Active firmware version:");
-  Serial.println(FirmwareVer);
-  pinMode(LED_BUILTIN, OUTPUT);
+  //Serial.print("Active firmware version:");
+  //Serial.println(FirmwareVer);
+  //pinMode(LED_BUILTIN, OUTPUT);
   connect_wifi();
 }
 void loop() {
-  if (button_boot.pressed) { //to connect wifi via Android esp touch app 
-    Serial.println("Firmware update Starting..");
-    firmwareUpdate();
-    button_boot.pressed = false;
-  }
+//  if (button_boot.pressed) { //to connect wifi via Android esp touch app 
+//    Serial.println("Firmware update Starting..");
+//    firmwareUpdate();
+//    button_boot.pressed = false;
+//  }
   repeatedCall();
 }
 
@@ -102,16 +97,16 @@ void connect_wifi() {
   }
 
   Serial.println("");
-  Serial.println("WiFi connected");
-  Serial.println("IP address: ");
-  Serial.println(WiFi.localIP());
+  //Serial.println("WiFi connected");
+  //Serial.println("IP address: ");
+  //Serial.println(WiFi.localIP());
 }
 
 
 void firmwareUpdate(void) {
   WiFiClientSecure client;
   client.setCACert(rootCACertificate);
-  httpUpdate.setLedPin(LED_BUILTIN, LOW);
+  //httpUpdate.setLedPin(LED_BUILTIN, LOW);
   t_httpUpdate_return ret = httpUpdate.update(client, URL_fw_Bin);
 
   switch (ret) {
@@ -135,7 +130,7 @@ int FirmwareVersionCheck(void) {
   fwurl += URL_fw_Version;
   fwurl += "?";
   fwurl += String(rand());
-  Serial.println(fwurl);
+  //Serial.println(fwurl);
   WiFiClientSecure * client = new WiFiClientSecure;
 
   if (client) 
@@ -147,7 +142,7 @@ int FirmwareVersionCheck(void) {
 
     if (https.begin( * client, fwurl)) 
     { // HTTPS      
-      Serial.print("[HTTPS] GET...\n");
+      //Serial.print("[HTTPS] GET...\n");
       // start connection and send HTTP header
       delay(100);
       httpCode = https.GET();
@@ -168,7 +163,7 @@ int FirmwareVersionCheck(void) {
   {
     payload.trim();
     if (payload.equals(FirmwareVer)) {
-      Serial.printf("\nDevice already on latest firmware version:%s\n", FirmwareVer);
+      //Serial.printf("\nDevice already on latest firmware version:%s\n", FirmwareVer);
       return 0;
     } 
     else 
