@@ -9,7 +9,7 @@ const char * password = "";
 
 
 String FirmwareVer = {
-  "2.5"
+  "3.0"
 };
 #define URL_fw_Version "https://raw.githubusercontent.com/IDronex3/drona-server-app/main/bin_version.txt"
 #define URL_fw_Bin "https://raw.githubusercontent.com/IDronex3/drona-server-app/main/fw.bin"
