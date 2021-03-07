@@ -4,7 +4,7 @@ const char * ssid = "Tekwill-kids";
 const char * password = "";
 
 String FirmwareVer = {
-  "3.9"
+  "4.0"
 };
 
 void connect_wifi();
@@ -22,5 +22,5 @@ void loop() {
 
   updateCall();
   //Serial.println("lol lol lol");
-  Serial.println("eyedrone");
+  Serial.println("stand up and fight");
 }
